@@ -30,25 +30,39 @@ The simulation mode is designed to be frictionless. The only script that is awar
 ## Simulation example
 
 For normal operation (using a real interface to Kraken), you would set the following values in the input configuration file:
+
 EXCHANGE='kraken_interface'
+
 BOOK='kraken_book'
+
 BOOK_PARAMS={}
+
 ASSETS_FILE='assets.txt'
+
 LOGS_DIR='logs/'
 
 For a simulation, you may instead use
+
 EXCHANGE='dummy_exchange'
+
 BOOK='manual_dummy_book'
+
 BOOK_PARAMS={'book_input':'manual_input_file.txt'}
+
 ASSETS_FILE='dummy_assets.txt'
+
 LOGS_DIR='dummy_logs/'
 
 or
 
 EXCHANGE='dummy_exchange'
+
 BOOK='dump_dummy_book'
+
 BOOK_PARAMS={'book_input':'kraken_book_dump.txt'}
+
 ASSETS_FILE='dummy_assets.txt'
+
 LOGS_DIR='dummy_logs/'
 
 **Warning**: When running a simulation, make sure you change the `ASSETS_FILE` and `LOGS_DIR` to avoid interfering with your data.
