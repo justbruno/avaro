@@ -1,8 +1,8 @@
-[botname] is a lightweight and flexible cryptocurrency trading bot.
+avaro is a lightweight and flexible cryptocurrency trading bot.
 
 The purpose of the design is to enable experimentation with ease and flexibility. Key modules are fairly decoupled and can be reused or replaced with ease. Object-oriented constructs are used sparingly in order to avoid imposing unnecessary restrictions.
 
-**Note** that [botname] is a personal project developed for educational purposes, and it is in constant evolution. It comes with no guarantees, and some of the ambitions advertised above may not yet be fully realised.
+**Note** that avaro is a personal project developed for educational purposes, and it is in constant evolution. It comes with no guarantees, and some of the ambitions advertised above may not yet be fully realised.
 
 # Features
 - Modular design.
@@ -19,7 +19,7 @@ You can run the bot with the following command:
 Using a simulation configuration file is recommended at first, to familiarise yourself with the bot.
 
 # Strats
-Strategies are divided into buy and sell decisions, implemented in separate modules. [botname] is designed so that strats only need to decide when it is a good time to buy/sell (although they can also decide trade price and volume). When that happens, the strategy only needs to generate an event (see callbacks in `orchestrator.py` and the example strategies). [botname] takes care of communicating with the exchange and recording successful trades.
+Strategies are divided into buy and sell decisions, implemented in separate modules. avaro is designed so that strats only need to decide when it is a good time to buy/sell (although they can also decide trade price and volume). When that happens, the strategy only needs to generate an event (see callbacks in `orchestrator.py` and the example strategies). avaro takes care of communicating with the exchange and recording successful trades.
 
 ## Example strat
 An example of how to write your own strat is given in `strats/simple_ema.py`, with configuration file `conf/simple_ema.conf`.
@@ -59,7 +59,7 @@ Check the file `conf/simulation.conf` for an example of a configuration file set
 
 # Exchanges
 
-[botname] is decoupled from the exchange being used. An interface for Kraken is included (`exchange/kraken_interface.py`, `exchange/kraken_book.py`), but this can be replaced with a suitably written interface for your favourite exchange.
+avaro is decoupled from the exchange being used. An interface for Kraken is included (`exchange/kraken_interface.py`, `exchange/kraken_book.py`), but this can be replaced with a suitably written interface for your favourite exchange.
 
 If using the provided Kraken interface, make sure you specify the location of your API keys in `exchange/kraken_interface.py`.
 
@@ -69,7 +69,7 @@ To illustrate the reusable nature of some of the modules, some examples are incl
 - `interactive_trader.py`, a simplistic command-line interface interactive trader.
 
 # Asset management
-[botname] includes a simple asset manager to help you keep track of the assets you currently hold. Profits made while an asset has been held are tracked, so that you can decide whether to sell it at a loss without incurring a loss overall.
+avaro includes a simple asset manager to help you keep track of the assets you currently hold. Profits made while an asset has been held are tracked, so that you can decide whether to sell it at a loss without incurring a loss overall.
 
 # Dependencies
 
@@ -79,6 +79,4 @@ https://github.com/krakenfx/kraken-wsclient-py
 # Disclaimer
 
 Use this software at your own risk. The author assumes no responsibility for your trading results.
-
-[botname] : avaro
 
