@@ -7,7 +7,7 @@ Launcher script.
 import sys, os
 import shutil
 import argparse
-import io_handler
+from iotools import io_handler
 import importlib
 
 def main():
@@ -22,7 +22,7 @@ def main():
            
     from conf import constants
         
-    import logger
+    from iotools import logger
     import orchestrator
         
     book = importlib.import_module(constants.EXCHANGE_DIR + '.' + config.BOOK)

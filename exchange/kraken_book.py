@@ -5,7 +5,6 @@ Kraken order book monitoring tools.
 """
 
 from kraken_wsclient_py import kraken_wsclient_py as client
-import logger
 import time, datetime
 import numpy as np
 import sys
@@ -51,7 +50,7 @@ class BookMonitor(exchange.book.BookMonitor):
             # TODO ChannelID is deprecated. Remove if safe
             if 'channelID' in message:
                 self.channel_id = message['channelID']
-                logger.trace('Set channel ID:{}'.format(self.channel_id))
+                #print('Set channel ID:{}'.format(self.channel_id))
 
             if self.channel_id in message:
                 data = message[1]
@@ -90,7 +89,7 @@ class BookMonitor(exchange.book.BookMonitor):
 
 
     def pong_handler(self, message):
-        logger.trace(message)
+        print(message)
 
 
     def stop(self):

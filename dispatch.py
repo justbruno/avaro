@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import logger
+from iotools import logger
 from conf import constants
 from conf import config
 

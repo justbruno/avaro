@@ -15,7 +15,7 @@ import hashlib
 import hmac
 import json
 import numpy as np
-import logger
+from iotools import logger
 
 from pathlib import Path
 HOMEDIR = str(Path.home())

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import logger
+from iotools import logger
 import numpy as np
 import datetime
 import time

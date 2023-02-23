@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 import numpy as np
-import logger
+from iotools import logger
 from conf import constants
 from conf import config
 

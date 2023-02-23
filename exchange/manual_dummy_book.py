@@ -4,7 +4,6 @@
 Simulated book monitor base on manual input.
 """
 
-import logger
 import time
 import exchange.book
 
@@ -20,8 +19,8 @@ class BookMonitor(exchange.book.BookMonitor):
     """
     def __init__(self, book_input=None):
         super().__init__()
-        logger.trace('USING MANUAL DUMMY BOOK')
-        logger.trace(f'input: {book_input}')
+        print('USING MANUAL DUMMY BOOK')
+        print(f'input: {book_input}')
         self.running = True
         self.book_input = book_input
         

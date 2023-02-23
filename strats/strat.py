@@ -1,4 +1,4 @@
-import logger
+from iotools import logger
 
 class Strat:
     """

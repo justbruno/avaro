@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+0#!/usr/bin/env python3
 
 """
 Reads data from an order book monitor and dumps it in a file.
@@ -7,7 +7,7 @@ Reads data from an order book monitor and dumps it in a file.
 import sys
 sys.path.append(r'conf')
 import threading
-import logger
+from iotools import logger
 import time
 import exchange.kraken_book as book
 

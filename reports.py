@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-import logger
+from iotools import logger
 
 def print_asset_list(asset_manager, book_monitor):
     """

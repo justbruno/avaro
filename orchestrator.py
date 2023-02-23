@@ -14,7 +14,7 @@ from conf import constants
 
 import execution
 import sys
-import logger
+from iotools import logger
 import assets
 import dispatch
 import filters

@@ -4,38 +4,9 @@
 Dummy exchange interface for simulation.
 """
 
-import sys
-import platform
-import time
-import base64
-import hashlib
-import hmac
-import json
-import numpy as np
-import logger
-
-from pathlib import Path
-HOMEDIR = str(Path.home())
-
-if int(platform.python_version_tuple()[0]) > 2:
-    import urllib.request as urllib2
-else:
-    import urllib2
-
-
-
-    
-DEBUG = 0
-LOG = 0
-
-api_domain = "https://api.kraken.com"
-
-def round_price(price):
-    return np.around(price, decimals=1)
-
 class ExchangeInterface:
     def __init__(self):
-        logger.trace('USING DUMMY EXCHANGE')
+        print('USING DUMMY EXCHANGE')
         self.nonce = 1
         self.handled_orders = 0
         self.orders = {}
@@ -50,7 +21,6 @@ class ExchangeInterface:
 
 
     def buy_limit(self, volume, price):
-        price = round_price(price)
         txid = self.handled_orders
         self.handled_orders += 1
         result = {'txid': txid, 'volume':volume, 'price':price}

@@ -9,8 +9,8 @@ CONF_REFRESH_ITERATIONS = 50
 import numpy as np
 import time
 import datetime
-import logger
-import io_handler
+from iotools import logger
+from iotools import io_handler
 from conf import config
 import clock
 import strats.strat

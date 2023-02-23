@@ -4,7 +4,7 @@
 Simulated book monitor base on data dump.
 """
 
-import logger
+from iotools import logger
 import time, datetime
 import numpy as np
 import sys

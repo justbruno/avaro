@@ -7,8 +7,8 @@ Buy strategy.
 CONF_REFRESH_ITERATIONS = 25
 
 import numpy as np
-import logger
-import io_handler
+from iotools import logger
+from iotools import io_handler
 from conf import config
 import clock
 import strats.strat

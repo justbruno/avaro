@@ -4,7 +4,6 @@
 Order book monitor interface.
 """
 
-import logger
 import numpy as np
 import sys
 import pickle
