@@ -1,6 +1,6 @@
 avaro is a lightweight and flexible cryptocurrency trading bot.
 
-The purpose of the design is to enable experimentation with ease and flexibility. Key modules are fairly decoupled and can be reused or replaced with ease. Object-oriented constructs are used sparingly in order to avoid imposing unnecessary restrictions.
+The purpose of the design is to enable experimentation with ease and flexibility. Key modules are fairly decoupled and can be reused or easily replaced. Object-oriented constructs are used sparingly in order to avoid imposing unnecessary restrictions.
 
 **Note** that avaro is a personal project developed for educational purposes, and it is in constant evolution. It comes with no guarantees, and some of the ambitions advertised above may not yet be fully realised.
 
@@ -55,7 +55,7 @@ or
 
 **Warning**: When running a simulation, make sure you change the `ASSETS_FILE` and `LOGS_DIR` to avoid interfering with your data.
 
-You can also change parameters such as `SPEEDUP`, to change the speed of the simulation (e.g. SPEEDUP=10 accelerates the simulation by a factor of 10). Since the strats and the book monitor run on separate threads, the simulation may not be entirely consistent at different speeds. `exchange/dump_dummy_book.py` has a sync parameter to help alleviate this, but note that the strats need to register a condition at the end of each iteration (see `strats/dip_chaser.py` and `strats/rally_chaser.py` for an example).
+You can also change parameters such as `SPEEDUP`, to change the speed of the simulation (e.g. SPEEDUP=10 accelerates the simulation by a factor of 10). Since the strats and the book monitor run on separate threads, the simulation may not be entirely consistent at different speeds. `exchange/dump_dummy_book.py` has a sync parameter to help alleviate this, but note that the strats need to register a condition at the end of each iteration if this flag is set (see `strats/dip_chaser.py` and `strats/rally_chaser.py` for an example).
 
 Check the file `conf/simulation.conf` for an example of a configuration file set up for simulation.
 
