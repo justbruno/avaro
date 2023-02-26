@@ -30,6 +30,7 @@ class BookMonitor(exchange.book.BookMonitor):
         self.book_input = book_input
         self.finished = False
         self.sync = sync
+        self.responsive = True
         
     def start(self, channel='spread'):
         self.read()
@@ -76,6 +77,7 @@ class BookMonitor(exchange.book.BookMonitor):
                 
         logger.info('Finished reading dump')
         self.finished = True
+        self.responsive = False
     
 
     def is_finished(self):

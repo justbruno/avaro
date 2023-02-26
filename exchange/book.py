@@ -27,7 +27,8 @@ class BookMonitor:
         # The book monitor will call these functions when it receives a message,
         # passing the message as argument.
         self.callbacks = []
-    
+        
+        self.responsive = True
 
     def add_callback(self, f):
         self.callbacks.append(f)

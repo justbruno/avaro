@@ -32,7 +32,8 @@ class BookMonitor(exchange.book.BookMonitor):
         self.ws = None
         self.channel_id = None
         self.ping_id = 0
-
+        self.responsive = True
+        
         # The book monitor will call these functions when it receives a message,
         # passing the message as argument.
         self.callbacks = []
@@ -75,6 +76,7 @@ class BookMonitor(exchange.book.BookMonitor):
 
 
     def ping(self):
+        self.responsive = False
         self.ping_id += 1        
         request = {
             'event': 'ping',
@@ -89,7 +91,8 @@ class BookMonitor(exchange.book.BookMonitor):
 
 
     def pong_handler(self, message):
-        print(message)
+        self.responsive = True
+        #print(message)
 
 
     def stop(self):

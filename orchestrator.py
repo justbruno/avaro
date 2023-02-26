@@ -7,6 +7,7 @@ and starts the threads required for the bot to run.
 It also prints periodic reports.
 """
 
+import os
 import time, datetime
 import numpy as np
 import threading
@@ -112,13 +113,21 @@ class Orchestrator:
                 
             reports.print_asset_list(self.asset_manager, self.book_monitor)
 
+                
             if self.trigger():
                 self.dispatcher.emit_buy(config.DEFAULT_BUY_VOL_EUR)
-            
-            logger.trace('Sleeping')
+
+            self.book_monitor.ping()
+
             time.sleep(config.ORCHESTRATOR_SLEEP)
 
+            if not self.book_monitor.responsive:
+                logger.trace('The book is unresponsive')
+                running = False
+                os._exit(0)
+            
 
+            
 if __name__ == "__main__":
     o = Orchestrator()
     o.run()
