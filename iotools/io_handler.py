@@ -5,13 +5,7 @@ Helpers for I/O.
 """
 
 def load_conf(filename):
-    configuration = {}
-    with open(filename, 'r') as f:
-        for l in f:
-            r = l.split('#')[0]
-            s = r.replace(' ', '').strip('\n').split('=')
-            configuration[s[0]] = eval(s[1])
-    return configuration
+    return update_conf({}, filename)
 
 
 def update_conf(configuration, filename):
@@ -21,3 +15,9 @@ def update_conf(configuration, filename):
             s = r.replace(' ', '').strip('\n').split('=')
             configuration[s[0]] = eval(s[1])
     return configuration
+
+
+def save_conf(configuration, filename):
+    with open(filename, 'w') as f:
+        for k in configuration:
+            f.write(f'{k}={configuration[k]}\n')

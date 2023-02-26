@@ -105,7 +105,7 @@ class Strat(strats.strat.Strat):
                 logger.trace(f'{self.drop:.5f}, {alpha:.2f}, {ceiling:.1f}, {bid:.1f}, {new_thr:.1f}, {buy_thr:.1f}, {self.max_drop:.5f}, {min_bid:.1f}, {buy_thr-bid}')
                 logger.trace('-'*50)
             if gone_through:
-                logger.trace('Chasing the dip: {:.2f} ({:.2f}) - {} )'.format(buy_thr, alpha, bid))
+                logger.trace('Chasing the dip: {:.2f} ({:.2f}) - {}'.format(buy_thr, alpha, bid))
                 if bid > buy_thr:
                     gone_through = False
                     ceiling = bid

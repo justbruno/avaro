@@ -248,12 +248,7 @@ class ExchangeInterface:
 
         method="CancelOrder"
         data="txid={}".format(txid)
-        if DEBUG <= 0:
-            r = self.private_request(method, data)
-        else:
-            logger.trace('DEBUG: Cancel order: ')
-            logger.trace(txid)
-            r="[]"
+        r = self.private_request(method, data)
             
         return r
 
