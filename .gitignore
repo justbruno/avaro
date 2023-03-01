@@ -11,8 +11,10 @@ __pycache__/*/**
 logs/*/**
 logs/*
 conf/0*
+conf/cleanup.sh
 dummy_logs/*/**
 dummy_logs/*
+output/*
 simresult*
 trigger_template.txt
 test.py

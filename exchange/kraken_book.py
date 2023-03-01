@@ -36,7 +36,9 @@ class BookMonitor(exchange.book.BookMonitor):
         # The book monitor will call these functions when it receives a message,
         # passing the message as argument.
         self.callbacks = []
-    
+
+        self.started = False
+        
 
     def add_callback(self, f):
         self.callbacks.append(f)
@@ -63,16 +65,20 @@ class BookMonitor(exchange.book.BookMonitor):
 
 
     def start(self, channel='spread'):
-        self.ws = client.WssClient()
-        self.ws.start()
+        print('Trying to start book')
+        if not self.started:
+            print('Starting book')
+            self.ws = client.WssClient()
+            self.ws.start()
 
-        self.ws.subscribe_public(
-            subscription = {
-                'name': channel
-            },
-            pair = ['XBT/EUR'],
-            callback = self.on_message
-        )
+            self.ws.subscribe_public(
+                subscription = {
+                    'name': channel
+                },
+                pair = ['XBT/EUR'],
+                callback = self.on_message
+            )
+            self.started = True
 
 
     def ping(self):

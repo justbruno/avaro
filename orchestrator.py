@@ -92,9 +92,9 @@ class Orchestrator:
         trigger = 0
         bypass = 0
         try:
-            with open('trigger.txt', 'r') as f:
+            with open(config.TRIGGER_FILE, 'r') as f:
                 trigger = int(f.readline())
-            with open('trigger.txt', 'w') as out:
+            with open(config.TRIGGER_FILE, 'w') as out:
                 out.write('0'.format(bypass))
 
             logger.trace('Trigger: {}'.format(trigger))
@@ -102,7 +102,7 @@ class Orchestrator:
                 logger.trace('Trigger ON')
                 return True
         except Exception as e:
-            logger.error('Error while handling trigger.')
+            logger.error(f'Error while handling trigger: {e}')
 
     def run(self):
         running = True
