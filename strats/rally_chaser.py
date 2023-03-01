@@ -25,12 +25,16 @@ class Strat(strats.strat.Strat):
     said target price, the strat decides to sell. This is meant to take advantage of rallies.    
     """
     
-    def __init__(self, book_monitor, asset_manager):
+    def __init__(self, book_monitor, asset_manager, conf_file=None):
+        super().__init__()
         self.book_monitor = book_monitor
         self.asset_manager = asset_manager
         self.COOLDOWN = 3
         
-        self.conf = io_handler.load_conf(config.SELL_CONF)
+        if conf_file == None:
+            self.conf_file = config.SELL_CONF
+        self.conf = io_handler.load_conf(conf_file)
+
 
         self.sell_thr = 0
         self.floor = 0
@@ -44,10 +48,6 @@ class Strat(strats.strat.Strat):
 
         # When this object decides to sell, it will call the functions in this list
         self.callbacks = []
-
-        
-    def add_callback(self, f):
-        self.callbacks.append(f)
 
     
     def print_report(self):
@@ -177,7 +177,7 @@ class Strat(strats.strat.Strat):
         while running:
             counter += 1
             if counter % CONF_REFRESH_ITERATIONS == 0:
-                self.conf = io_handler.load_conf(config.SELL_CONF)
+                self.conf = io_handler.load_conf(self.conf_file)
             if len(self.asset_manager.get_assets()) <= 0:
                 #logger.trace('WL waiting for an order...')
                 clock.sleep(5)

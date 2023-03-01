@@ -7,6 +7,7 @@ and starts the threads required for the bot to run.
 It also prints periodic reports.
 """
 
+
 import os
 import time, datetime
 import numpy as np
@@ -38,6 +39,8 @@ class Orchestrator:
     def __init__(self, exchange_interface, book_monitor, buy_strat, sell_strat):
 
         logger.info('Initialising Orchestrator...')
+
+        self.book_unresponsive = 0
         
         # Exchange interface 
         self.exchange = exchange_interface.ExchangeInterface()
@@ -122,10 +125,13 @@ class Orchestrator:
             time.sleep(config.ORCHESTRATOR_SLEEP)
 
             if not self.book_monitor.responsive:
-                logger.trace('The book is unresponsive')
-                running = False
-                os._exit(0)
-            
+                logger.info('The book is unresponsive')
+                self.book_unresponsive += 1
+                if self.book_unresponsive >= config.MAX_BOOK_UNRESPONSIVE:
+                    running = False
+                    os._exit(0)
+            else:
+                self.book_unresponsive = 0    
 
             
 if __name__ == "__main__":

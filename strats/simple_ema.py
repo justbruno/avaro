@@ -72,6 +72,7 @@ class Strat(strats.strat.Strat):
                 self.queue = [mmp]*self.conf['QUEUE_LENGTH']
                                     
             clock.sleep(self.conf['ITERATION_SLEEP'])
+            clock.Clock.register_buy() # For simulation sync
 
             
 

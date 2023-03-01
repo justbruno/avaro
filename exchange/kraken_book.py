@@ -9,7 +9,6 @@ import time, datetime
 import numpy as np
 import sys
 import pickle
-from conf import config
 import json
 import exchange.book
 
@@ -44,6 +43,7 @@ class BookMonitor(exchange.book.BookMonitor):
 
 
     def on_message(self, message):
+        self.responsive = True
         for callback in self.callbacks:
             callback(message)                    
 

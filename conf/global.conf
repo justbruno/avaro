@@ -14,3 +14,4 @@ LOGGER_LEVEL=500
 SPEEDUP=1
 GIVE_UP_MARGIN=15
 DEFAULT_BUY_VOL_EUR=11
+MAX_BOOK_UNRESPONSIVE=30 # When the book monitor is unresponsive for this many iterations in a row, we exit the program

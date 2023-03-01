@@ -24,10 +24,13 @@ class Strat(strats.strat.Strat):
     said target price, the strat decides to buy. This is meant to take advantage of dips in price.    
     """
     
-    def __init__(self, book_monitor):
+    def __init__(self, book_monitor, conf_file=None):
+        super().__init__()
         self.book_monitor = book_monitor
 
-        self.conf = io_handler.load_conf(config.BUY_CONF)
+        if conf_file == None:
+            self.conf_file = config.BUY_CONF
+        self.conf = io_handler.load_conf(conf_file)
         
         self.max_drop = 0 # Max drop observed so far
         self.drop = 0 # Current drop
@@ -36,10 +39,6 @@ class Strat(strats.strat.Strat):
         self.callbacks = []
 
         self.verbose = False
-        
-
-    def add_callback(self, f):
-        self.callbacks.append(f)
 
 
     def print_report(self):
@@ -69,7 +68,7 @@ class Strat(strats.strat.Strat):
                 logger.trace('/\\'*50)
                 logger.trace('The buy strat is alive')
             if counter % CONF_REFRESH_ITERATIONS == 0:
-                self.conf = io_handler.load_conf(config.BUY_CONF)
+                self.conf = io_handler.load_conf(self.conf_file)
 
             ask, bid = self.book_monitor.get_ask_bid()
 

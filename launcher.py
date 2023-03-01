@@ -37,6 +37,7 @@ def main():
     logger.trace(f'Sell strat: {config.SELL_STRAT}')
 
     o = orchestrator.Orchestrator(exchange_interface=exchange_interface, book_monitor=book_monitor, buy_strat=buy_strat, sell_strat=sell_strat)
+    #os.remove('conf/config.py')
     o.run()
 
 
