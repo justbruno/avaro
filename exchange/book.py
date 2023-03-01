@@ -7,7 +7,6 @@ Order book monitor interface.
 import numpy as np
 import sys
 import pickle
-from conf import config
 import json
 
 def rfloat(s, decimals=2):

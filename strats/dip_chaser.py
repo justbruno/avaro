@@ -30,7 +30,7 @@ class Strat(strats.strat.Strat):
 
         if conf_file == None:
             self.conf_file = config.BUY_CONF
-        self.conf = io_handler.load_conf(conf_file)
+        self.conf = io_handler.load_conf(self.conf_file)
         
         self.max_drop = 0 # Max drop observed so far
         self.drop = 0 # Current drop

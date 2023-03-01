@@ -33,7 +33,7 @@ class Strat(strats.strat.Strat):
         
         if conf_file == None:
             self.conf_file = config.SELL_CONF
-        self.conf = io_handler.load_conf(conf_file)
+        self.conf = io_handler.load_conf(self.conf_file)
 
 
         self.sell_thr = 0

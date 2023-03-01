@@ -10,6 +10,7 @@ predictive/*/**
 __pycache__/*/**
 logs/*/**
 logs/*
+conf/0*
 dummy_logs/*/**
 dummy_logs/*
 simresult*
