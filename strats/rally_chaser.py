@@ -69,7 +69,7 @@ class Strat(strats.strat.Strat):
             BTC_VOL = np.round(current_order['volume'], decimals=8)
             
         logger.trace('='*50)
-        logger.trace('Sell decision report:')
+        logger.trace('Sell strat report:')
         logger.trace('MMP: {}'.format(mmp))
         logger.trace('BID: {}'.format(bid))
         logger.trace('MAX: {}'.format(self.current_max))        

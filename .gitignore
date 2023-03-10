@@ -15,6 +15,7 @@ conf/cleanup.sh
 dummy_logs/*/**
 dummy_logs/*
 output/*
+sandbox/*
 simresult*
 trigger_template.txt
 test.py

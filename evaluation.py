@@ -5,6 +5,8 @@ Tools to evaluate the performance of a strategy based on its trading log.
 FEE = 0.0016
 import numpy as np
 from iotools import io_handler
+import argparse
+from conf import constants
 
 def evaluate(filename):
     profit = 0
@@ -54,4 +56,25 @@ def evaluate(filename):
             portfolio_values.append((ts, held*last_price*(1-FEE) + profit))
 
     return {'nbuys':nbuys, 'nsells':nsells, 'portfolio_values':portfolio_values, 'held':held, 'profit':profit, 'revenue':revenue}
+    
+if __name__ == '__main__':
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-i', '--input')
+    args = parser.parse_args()
+    filename = args.input
+    
+    results = evaluate(filename)
+
+    bid = 20937#book_monitor.get_bid()
+    print(f'Assuming a price of {bid}')
+    gains = results['profit'] + results['held']*bid*(1-constants.FEE)
+            
+    print(f"Buys: {results['nbuys']}")
+    print(f"Sells: {results['nsells']}")
+    print(f"Profit: {results['profit']}")
+    print(f'Potential gains: {gains}')
+    print(f"Held: {results['held']}")
+    print(f"Revenue: {results['revenue']}")
+    print()
+
     

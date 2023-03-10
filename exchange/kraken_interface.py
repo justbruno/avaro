@@ -109,7 +109,6 @@ class ExchangeInterface:
         return order
 
 
-    # Buy limit
     def buy_limit(self, volume, price):
         price = round_price(price)
         logger.trace('BUY LIMIT: {}, {}'.format(volume, price))

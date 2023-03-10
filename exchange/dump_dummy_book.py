@@ -73,7 +73,7 @@ class BookMonitor(exchange.book.BookMonitor):
                 if count % 1000 == 0:
                     logger.info(count)
             except Exception as e:
-                print('Error in dummy book', e)
+                print('Error in dummy book')
                 
         logger.info('Finished reading dump')
         self.finished = True

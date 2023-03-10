@@ -47,3 +47,6 @@ class BookMonitor:
 
     def get_spread(self):
         return np.abs(self.best_ask-self.best_bid)
+
+    def wait_till_ready(self):
+        pass

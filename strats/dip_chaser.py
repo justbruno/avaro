@@ -43,7 +43,7 @@ class Strat(strats.strat.Strat):
 
     def print_report(self):
         logger.trace('='*50)
-        logger.trace('Buy decision report')
+        logger.trace('Buy strat report')
         logger.trace('Drop     Max drop Drop thr.')
         logger.trace(f"{self.drop:.5f}  {self.max_drop:.5f}  {self.conf['DROP_THR']}")
         logger.trace('-'*50)
