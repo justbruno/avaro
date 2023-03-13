@@ -56,6 +56,12 @@ class AssetManager():
     def add_progress(self, profit):        
         for k in range(len(self.asset_list)):
             self.asset_list[k]['progress'] += profit
+            # When a high-progress expensive asset is sold, newer, low-progress cheap assets will
+            # reflect the loss when the high-progress asset is sold. We are not interested in
+            # registering negative progress (no need to make up for losses, as they were covered by past profits),
+            # so we truncate to zero.
+            self.asset_list[k]['progress'] = np.max([0, self.asset_list[k]['progress']])
+
         self.dump_assets()
                 
 
