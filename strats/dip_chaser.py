@@ -62,8 +62,9 @@ class Strat(strats.strat.Strat):
         gone_through = False
         self.max_drop = 0
         
-        while running:
+        while running:            
             counter += 1
+            # Print info and reload conf
             if counter % 50 == 0:
                 logger.trace('/\\'*50)
                 logger.trace('The buy strat is alive')

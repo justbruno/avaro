@@ -16,3 +16,14 @@ def print_asset_list(asset_manager, book_monitor):
         logger.trace('{:.4f}, {:.8f}, {:.4f}, {:.2f}, {:.2f}'.format(order['price'], order['volume'], bid/order['price'], order['progress'], gain))
 
     
+def print_balance(exchange_interface):
+    """
+    Prints a report of the available balance.
+    """
+    balance = exchange_interface.get_balance()
+    eur_balance = balance['result']['ZEUR']
+    btc_balance = balance['result']['XXBT']
+    pv = exchange_interface.get_trade_balance('EUR')['result']['eb']
+    logger.trace(f'Balance report: EUR:{eur_balance}. BTC:{btc_balance}. Portfolio value (EUR): {pv}')
+
+    

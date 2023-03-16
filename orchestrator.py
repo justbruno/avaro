@@ -109,13 +109,17 @@ class Orchestrator:
         while running:
             try:
                 self.sell_strat.print_report()
-                self.buy_strat.print_report()
+                self.buy_strat.print_report()                
             except Exception as e:
                 logger.error('Failed to print report')
                 logger.error(e)
-                
-            reports.print_asset_list(self.asset_manager, self.book_monitor)
 
+            try:
+                reports.print_asset_list(self.asset_manager, self.book_monitor)
+                reports.print_balance(self.exchange)
+            except:
+                logger.error('Error printing reports')
+                
                 
             if self.trigger():
                 self.dispatcher.emit_buy(config.DEFAULT_BUY_VOL_EUR)
