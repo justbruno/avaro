@@ -33,7 +33,19 @@ def round_price(price):
 class ExchangeInterface:
     def __init__(self):
         self.nonce = 1
-
+        self.api_rate_counter = 0
+        
+    def decrease_rate_counter(self):
+        '''
+        Resets the rate limit counter as per Kraken rules https://support.kraken.com/hc/en-us/articles/206548367-What-are-the-API-rate-limits-
+        This is meant to be run in a thread, and will give a pessimistic estimate, because the decrease happens only when the 
+        thread gets a CPU slice.
+        '''
+        while True:
+            self.api_rate_counter -= .33
+            self.api_rate_counter = np.max([self.api_rate_counter, 0])
+            time.sleep(1)
+        
     def increase_nonce(self):
         self.nonce += 1
         
@@ -66,6 +78,8 @@ class ExchangeInterface:
                 success = False
                 time.sleep(3)
 
+        # TODO Certain requests increase by 2. Do we want to take them into account?
+        self.api_rate_counter += 1
         return json.loads(api_reply)
 
 

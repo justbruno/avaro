@@ -31,6 +31,10 @@ def book_starter(book_monitor):
 def strat_starter(strat):
     strat.run()
 
+def rate_reset_starter(exchange):
+    exchange.decrease_rate_counter()
+
+    
 class Orchestrator:    
     """
     This class creates the main objects and manages the background threads where they run.
@@ -69,6 +73,8 @@ class Orchestrator:
         # Start background threads
         book_thread = threading.Thread(target=book_starter, args=(self.book_monitor,))
         book_thread.start() 
+        rate_limit_thread = threading.Thread(target=rate_reset_starter, args=(self.exchange,))
+        rate_limit_thread.start() 
 
         # Wait until the book monitor starts
         mmp = self.book_monitor.get_mmp()
@@ -117,6 +123,7 @@ class Orchestrator:
             try:
                 reports.print_asset_list(self.asset_manager, self.book_monitor)
                 reports.print_balance(self.exchange)
+                logger.trace(f'API rate counter: {self.exchange.api_rate_counter}')
             except:
                 logger.error('Error printing reports')
                 
