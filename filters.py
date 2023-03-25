@@ -31,8 +31,8 @@ class Filter:
         if conf['BLOCK']:
             return False
 
-        r = self.exchange.get_balance()
-        funds = float(r['result']['ZEUR']) #
+        funds = self.exchange.get_balance('EUR')
+        #funds = float(r['result']['ZEUR']) #
 
         # For margin from last buy
         queue = self.asset_manager.get_assets()
