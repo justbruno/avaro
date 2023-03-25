@@ -49,4 +49,7 @@ class BookMonitor:
         return np.abs(self.best_ask-self.best_bid)
 
     def wait_till_ready(self):
-        pass
+        mmp = self.get_mmp()
+        while mmp == 0.0:
+            time.sleep(1)
+            mmp = self.get_mmp()

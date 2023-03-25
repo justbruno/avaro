@@ -124,8 +124,8 @@ class Orchestrator:
                 reports.print_asset_list(self.asset_manager, self.book_monitor)
                 reports.print_balance(self.exchange)
                 logger.trace(f'API rate counter: {self.exchange.api_rate_counter}')
-            except:
-                logger.error('Error printing reports')
+            except Exception as e:
+                logger.error(f'Error printing reports:  {e}')
                 
                 
             if self.trigger():

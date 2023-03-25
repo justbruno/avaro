@@ -103,27 +103,5 @@ class BookMonitor(exchange.book.BookMonitor):
 
     def stop(self):
         self.ws.stop()
-        self.ws.close()
-
-        
-    def get_mmp(self):
-        return np.mean([self.best_ask, self.best_bid])
-
-    def get_ask_bid(self):
-        return self.best_ask, self.best_bid
-
-    def get_ask(self):
-        return self.best_ask
-
-    def get_bid(self):
-        return self.best_bid
-
-    def get_spread(self):
-        return np.abs(self.best_ask-self.best_bid)
-
-    def wait_till_ready(self):
-        mmp = self.get_mmp()
-        while mmp == 0.0:
-            time.sleep(1)
-            mmp = self.get_mmp()
+        self.ws.close()        
     

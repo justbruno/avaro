@@ -7,6 +7,8 @@ Kraken exchange interface.
 API_KEY_FILE = '/kk/ak.txt'
 API_SECRET_FILE = '/kk/pk.txt'
 
+ASSET_NAME_MAP = {'EUR':'ZEUR', 'BTC':'XXBT'}
+
 import sys
 import platform
 import time
@@ -84,26 +86,21 @@ class ExchangeInterface:
 
 
     def public_request(self, api_method, api_data):
-        if LOG >= 1:
-            logger.exchange_trace('Kraken interface public request')
-            logger.exchange_trace('api_method: {}'.format(api_method))
-            logger.exchange_trace('api_data: {}'.format(api_data))
+        logger.exchange_trace('Kraken interface public request')
+        logger.exchange_trace('api_method: {}'.format(api_method))
+        logger.exchange_trace('api_data: {}'.format(api_data))
         api_path = "/0/public/"
         api_request = urllib2.Request(api_domain + api_path + api_method + '?' + api_data)
 
-        if LOG >= 1:
-            logger.exchange_trace('Made request')
-
-        if LOG >= 1:
-            logger.exchange_trace('Opening url...')
+        logger.exchange_trace('Made request')
+        logger.exchange_trace('Opening url...')
         api_reply=None
         try:
             api_reply = urllib2.urlopen(api_request).read().decode()
         except Exception as error:
             logger.exchange_trace("API call failed (%s)" % error)
 
-        if LOG >= 1:
-            logger.exchange_trace('Done')
+        logger.exchange_trace('Done')
         return json.loads(api_reply)
 
 
@@ -270,22 +267,17 @@ class ExchangeInterface:
         method="TradeBalance"
         data="asset={}".format(asset)
         r = self.private_request(method, data)
-        return r
+        return r['result']['eb']
 
     
-    def get_balance(self):
+    def get_balance(self, asset):
         method="Balance"
         data=""
-        r = self.private_request(method, data)
+        r = self.private_request(method, data)['result']
+        asset = ASSET_NAME_MAP[asset]
+        if asset in r:
+            return float(r[asset])
         return r
-
-    
-    def get_BTC_balance(self):
-        r = self.get_balance()['result']
-        if 'XXBT' in r:
-            return float(r['XXBT'])
-        else:
-            return 0.
 
                 
     def get_spread(self):

@@ -20,10 +20,9 @@ def print_balance(exchange_interface):
     """
     Prints a report of the available balance.
     """
-    balance = exchange_interface.get_balance()
-    eur_balance = balance['result']['ZEUR']
-    btc_balance = balance['result']['XXBT']
-    pv = exchange_interface.get_trade_balance('EUR')['result']['eb']
+    eur_balance = exchange_interface.get_balance('EUR')
+    btc_balance = exchange_interface.get_balance('BTC')
+    pv = exchange_interface.get_trade_balance('EUR')
     logger.trace(f'Balance report: EUR:{eur_balance}. BTC:{btc_balance}. Portfolio value (EUR): {pv}')
 
     
