@@ -39,6 +39,32 @@ class CoinbaseExchangeAuth(AuthBase):
         })
         return request
 
+
+    def update_headers(self, headers, payload, method, url):
+
+        response = requests.get(URL + 'time')
+        epoch = float(response.json()['epoch'])
+        our_epoch = time.time()
+        time_phase = epoch-our_epoch
+
+        print(payload)
+        print(method)
+        print(url)
+        
+        #timestamp = str(int(time.time()+time_phase))
+        timestamp = str(int(time.time()))
+        message = timestamp + method + url.split('?')[0] + str(payload or '')
+        signature = hmac.new(self.secret_key.encode('utf-8'), message.encode('utf-8'), digestmod=hashlib.sha256).digest()
+        
+        headers["accept"] = 'application/json'        
+        headers['CB-ACCESS-SIGN'] = signature.hex()
+        headers['CB-ACCESS-TIMESTAMP'] = timestamp
+        headers['CB-ACCESS-KEY'] = self.api_key
+        #headers['CB-ACCESS-PASSPHRASE'] = self.passphrase
+        headers['Content-Type'] = 'application/json'
+        return headers
+
+    
 def get_auth():
     try:
         home = str(Path.home())

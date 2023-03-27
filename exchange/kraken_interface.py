@@ -128,6 +128,8 @@ class ExchangeInterface:
         r = self.private_request(method, data)
         if len(r['error']) > 0:
             raise Exception(f"The exchange returned an error after trying to place a limit buy order: {r['error']}")
+        logger.trace("in buy_limit")
+        logger.trace(r)
         txid = r['result']['txid'][0]        
         order = {'volume':volume,
                   'price':price,
@@ -226,11 +228,11 @@ class ExchangeInterface:
         return r['result']
 
 
+    
     def order_is_closed(self, order):
         try:
             txid = order['txid']
             r = self.query_orders(txid)
-
             if r[txid]['status'] == 'closed':
                 return True
         except Exception as e:

@@ -98,7 +98,7 @@ class Operator:
                 
     def buy_market(self, amount):
         try:
-            buy_order_price = self.gbp_bid() # To calculaet the amount in target currency
+            buy_order_price = self.gbp_bid() # To calculate the amount in target currency
             amount = config.DEFAULT_BUY_VOL_EUR/buy_order_price
             amount = np.around(amount, decimals=8)        
             order = self.exchange.buy_market(amount)    
