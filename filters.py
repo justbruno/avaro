@@ -52,7 +52,7 @@ class Filter:
         logger.trace(f'Funds: {funds}. Required: {config.DEFAULT_BUY_VOL_EUR}')
         logger.trace(f'Elapsed since last buy: {time.time()-last_buy_time}. Required: {BUY_COOLDOWN}')
         logger.trace(f"Margin from last buy (*): {last_buy_price-buy_price}. Required: {conf['REBUY_MARGIN']}")    
-        logger.trace(f"Queue length: {len(queue)}. Required: {conf['AUTO_BUYS']}")    
+        logger.trace(f"Queue length: {len(queue)}. Max: {conf['AUTO_BUYS']}")    
         logger.trace('-'*20)
         logger.trace()
 

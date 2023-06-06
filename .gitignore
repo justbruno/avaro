@@ -28,3 +28,4 @@ opt_launcher.py
 perf_eval.py
 proc_starter.py
 coinbase_interface.py
+adjust_assets.py

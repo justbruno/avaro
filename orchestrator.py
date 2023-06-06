@@ -112,6 +112,7 @@ class Orchestrator:
 
     def run(self):
         running = True
+        iteration = 0
         while running:
             try:
                 self.sell_strat.print_report()
@@ -127,10 +128,17 @@ class Orchestrator:
             except Exception as e:
                 logger.error(f'Error printing reports:  {e}')
                 
+
+            if iteration % config.FILTER_PRINT_INTERVAL == 0:
+                # We invoke the filter so it prints out the conditions
+                filter_passed = self.op_filter.buy_filter()
+                filter_action = 'allowing' if filter_passed else 'blocking'
+                logger.trace(f'The filter is {filter_action} purchases.')
                 
             if self.trigger():
                 self.dispatcher.emit_buy(config.DEFAULT_BUY_VOL_EUR)
-
+            
+                
             self.book_monitor.ping()
 
             time.sleep(config.ORCHESTRATOR_SLEEP)
@@ -144,7 +152,8 @@ class Orchestrator:
             else:
                 self.book_unresponsive = 0    
 
-            
+            iteration += 1
+                
 if __name__ == "__main__":
     o = Orchestrator()
     o.run()

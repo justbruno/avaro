@@ -50,7 +50,6 @@ class ExchangeInterface:
         pass
         return order
 
-
     def get_open_orders(self):
         pass
 
