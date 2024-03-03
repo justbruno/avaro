@@ -11,6 +11,10 @@ import time
 import exchange.kraken_book as book
 import exchange.dummy_exchange as exchange
 
+from PyQt6.QtWidgets import QApplication, QLabel, QWidget, QVBoxLayout
+from PyQt6.QtCore import Qt, QUrl
+
+
 def book_starter(book_monitor):
     print('Thread starting...')    
     book_monitor.start()
@@ -33,12 +37,20 @@ while True:
     print()
     print(f'Bid: {bid}')
     print(f'Ask: {ask}')
-    print('Enter b to buy at current ask, s to sell last acquired asset, anything else to refresh.')
+    print('Enter'\
+          '\nb to buy limit at current ask'\
+          '\nv to buy market'\
+          '\ns to sell last acquired asset'\
+          '\nanything else to refresh.')
     
     k = input()
     if k == 'b':
         order = exchange_interface.buy_limit(volume=0.0001, price=ask)
         assets.append(order)
+    elif k == 'v':
+        order = assets[-1]
+        exchange_interface.buy_market(volume=0.0001)
+        assets = assets[:-1]
     elif k == 's':
         order = assets[-1]
         exchange_interface.sell_limit(volume=0.0001, price=ask)

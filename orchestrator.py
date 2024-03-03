@@ -105,10 +105,14 @@ class Orchestrator:
 
             logger.trace('Trigger: {}'.format(trigger))
             if trigger == 1:
-                logger.trace('Trigger ON')
-                return True
+                logger.trace('Limit Trigger ON')
+                self.dispatcher.emit_buy(config.DEFAULT_BUY_VOL_EUR)
+            elif trigger == 2:
+                logger.trace('Market Trigger ON')
+                self.dispatcher.emit_buy(config.DEFAULT_BUY_VOL_EUR, order_type='market')
         except Exception as e:
             logger.error(f'Error while handling trigger: {e}')
+
 
     def run(self):
         running = True
@@ -135,8 +139,7 @@ class Orchestrator:
                 filter_action = 'allowing' if filter_passed else 'blocking'
                 logger.trace(f'The filter is {filter_action} purchases.')
                 
-            if self.trigger():
-                self.dispatcher.emit_buy(config.DEFAULT_BUY_VOL_EUR)
+            self.trigger()
             
                 
             self.book_monitor.ping()
@@ -153,7 +156,7 @@ class Orchestrator:
                 self.book_unresponsive = 0    
 
             iteration += 1
-                
+            
 if __name__ == "__main__":
     o = Orchestrator()
     o.run()

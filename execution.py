@@ -85,7 +85,7 @@ class Operator:
                 try:
                     r = self.exchange.cancel_order(order)
                 except Exception as e:
-                    logger.error('Error cancelling limit order: {}'.format(e))
+                    logger.error('Error cancelling limit order in execution.py: {}'.format(e))
                     continue                    
                 s = 'CANCEL - {}'.format(self.book_monitor.get_ask_bid()[1])
                 logger.info(s)
@@ -103,9 +103,9 @@ class Operator:
             amount = np.around(amount, decimals=8)        
             order = self.exchange.buy_market(amount)    
         except Exception as e:
-            logger.trace('Error buying market: {}'.format(e))
-            return
-        logger.trace(r)
+            logger.trace('Error buying market in execution.py: {}'.format(e))
+            return False, None
+        logger.trace(order)
         logger.trace('*'*50)
         s = 'BUY MARKET ORDER - {} at {}'.format(amount, buy_order_price)
         logger.trace(s)
@@ -142,7 +142,7 @@ class Operator:
                     if len(r['error']) > 0:
                         completed = True
                         success = False
-                    logger.error(f'ERROR placing limit order: {r}')
+                    logger.error(f'ERROR placing limit order in execution.py: {r}')
                     if 'EOrder:Insufficient funds' in r['error']:
                         completed = True
                         success = False
@@ -152,9 +152,52 @@ class Operator:
                     logger.info(f'Sell order successful: {r}')
                     clock.sleep(2)
             except Exception as e:
-                logger.error(f'Error placing sell limit order: {e}')
+                logger.error(f'Error placing sell limit order in execution.py: {e}')
                 completed = True
         logger.trace('Out of limit order loop')
 
         return success, price
                     
+
+    def sell_market(self, order):
+        """
+        Emits a market sell order, for the given order.
+
+        :param float order: an object containing information about the buy order we want to sell (e.g. we will sell the amount that was bought)
+        :return: A tuple (success, price). If the operation was unsuccessful, success is False. If successful, success is True and price is as set in the sell order.
+        """
+        
+        amount = np.round(order['volume'], decimals=8)
+        logger.trace('Selling {}'.format(amount))
+
+        completed = False
+        success = False
+        while not completed:
+            try:
+                r = self.exchange.sell_market(amount)
+                s = 'Emitted SELL ORDER - {}'.format(amount)
+                logger.info(s)
+                if 'error' in r:
+                    if len(r['error']) > 0:
+                        completed = True
+                        success = False
+                    logger.error(f'ERROR placing market order in execution.py: {r}')
+                    if 'EOrder:Insufficient funds' in r['error']:
+                        completed = True
+                        success = False
+                else:
+                    completed = True
+                    success = True
+                    logger.info(f'Sell order successful: {r}')
+                    clock.sleep(2)
+            except Exception as e:
+                logger.error(f'Error placing sell limit order in execution.py: {e}')
+                completed = True
+        logger.trace('Out of market order loop')
+
+        ask, bid = self.book_monitor.get_ask_bid()
+        price = bid
+        
+        return success, price
+                    
+    

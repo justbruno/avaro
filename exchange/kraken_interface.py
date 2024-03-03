@@ -176,7 +176,13 @@ class ExchangeInterface:
         r = self.private_request(method, data)
         if len(r['error']) > 0:
             raise Exception(f"The exchange returned an error after trying to place a market sell order: {r['error']}")
-        txid = r['result']['txid'][0]        
+        txid = r['result']['txid'][0]
+
+        # It seems that the only way to get the price
+        # is to estimate it like this
+        bid, ask = self.get_bid_ask()
+        price = bid
+        
         order = {'volume':volume,
                   'price':price,
                  'txid':txid}
@@ -190,7 +196,13 @@ class ExchangeInterface:
         r = self.private_request(method, data)
         if len(r['error']) > 0:
             raise Exception(f"The exchange returned an error after trying to place a market buy order: {r['error']}")
-        txid = r['result']['txid'][0]        
+        txid = r['result']['txid'][0]
+
+        # It seems that the only way to get the price
+        # is to estimate it like this
+        bid, ask = self.get_bid_ask()
+        price = ask
+        
         order = {'volume':volume,
                   'price':price,
                  'txid':txid}
@@ -288,6 +300,15 @@ class ExchangeInterface:
         r = self.public_request(method, data)
         return r
 
+
+    def get_bid_ask(self):
+        r = self.get_spread()
+        last = r['result']['XXBTZEUR'][-1]
+        bid = float(last[1])
+        ask = float(last[2])
+        return bid, ask
+
+    
     def get_candles(self, granularity=1):
         method = "OHLC"
         data="pair=XXBTZEUR&interval={}".format(granularity)
