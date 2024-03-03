@@ -57,22 +57,17 @@ class ControlPanel(QMainWindow):
         
         self.setCentralWidget(container)
 
-
         
     def buy_limit_event(self):
-        print("Buy LIMIT clicked!!!1")
         self.dispatcher.emit_buy(order_type='limit')
         
     def buy_market_event(self):
-        print("Buy MARKET clicked!!!1")
         self.dispatcher.emit_buy(order_type='market')
         
     def sell_limit_event(self):
-        print("Sell LIMIT clicked!!!1")
         self.dispatcher.emit_sell(order_type='limit')
         
     def sell_market_event(self):
-        print("Sell MARKET clicked!!!1")
         self.dispatcher.emit_sell(order_type='market')
         
 
