@@ -55,7 +55,7 @@ class Filter:
         logger.trace(f"Queue length: {len(queue)}. Max: {conf['AUTO_BUYS']}")    
         logger.trace('-'*20)
         logger.trace()
-
+       
         return funds >= config.DEFAULT_BUY_VOL_EUR \
             and time.time()-last_buy_time >= BUY_COOLDOWN \
             and last_buy_price-buy_price >= conf['REBUY_MARGIN'] \

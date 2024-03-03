@@ -24,6 +24,8 @@ import reports
 from conf import config
 import clock
 
+from gui import panel
+
 def book_starter(book_monitor):
     logger.trace('Thread starting...')    
     book_monitor.start()
@@ -34,6 +36,8 @@ def strat_starter(strat):
 def rate_reset_starter(exchange):
     exchange.decrease_rate_counter()
 
+def gui_starter(book_monitor, dispatcher):
+    panel.initialize(book_monitor, dispatcher)
     
 class Orchestrator:    
     """
@@ -90,7 +94,12 @@ class Orchestrator:
         buy_thread.start() 
 
         self.asset_manager.sort_asset_list()
-        
+
+        if config.GUI:
+            logger.trace("Initializing GUI...")
+            gui_thread = threading.Thread(target=gui_starter, args=(self.book_monitor, self.dispatcher,))
+            gui_thread.start() 
+            
     
     def trigger(self):
 
@@ -106,10 +115,10 @@ class Orchestrator:
             logger.trace('Trigger: {}'.format(trigger))
             if trigger == 1:
                 logger.trace('Limit Trigger ON')
-                self.dispatcher.emit_buy(config.DEFAULT_BUY_VOL_EUR)
+                self.dispatcher.emit_buy(order_type='limit')
             elif trigger == 2:
                 logger.trace('Market Trigger ON')
-                self.dispatcher.emit_buy(config.DEFAULT_BUY_VOL_EUR, order_type='market')
+                self.dispatcher.emit_buy(order_type='market')
         except Exception as e:
             logger.error(f'Error while handling trigger: {e}')
 

@@ -39,10 +39,21 @@ class OrderDispatcher:
 
 
     
-    def emit_sell(self, price=None):
+    def emit_sell(self, price=None, order_type='limit'):
         logger.info("Dispatcher: emitting sell")
         order = self.asset_manager.get_first()        
-        success, price = self.operator.sell_limit(order, price=price)
+
+        if order == None:
+            logger.info("Dispatcher: A sell order was attempted, but no assets are currently held.")
+            return
+        
+        if order_type == 'limit':
+            success, price = self.operator.sell_limit(order, price=price)
+        elif order_type == 'market':
+            success, price = self.operator.sell_market(order)
+        else:
+            raise Exception(f'Unknown order type in dispatch: {order_type}')
+
         if success:
             self.asset_manager.queue_pop()
             profit = price*order['volume']*(1-constants.FEE) - order['price']*order['volume']*(1+constants.FEE)

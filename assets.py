@@ -47,10 +47,12 @@ class AssetManager():
     def queue_pop(self):
         if len(self.asset_list) > 0:
             order = self.asset_list[0]
-        self.asset_list = self.asset_list[1:]            
-        self.sort_asset_list()
-        self.dump_assets()
-        return order
+            self.asset_list = self.asset_list[1:]            
+            self.sort_asset_list()
+            self.dump_assets()
+            return order
+        else:
+            return None
         
 
     def add_progress(self, profit):        
@@ -66,7 +68,10 @@ class AssetManager():
                 
 
     def get_first(self):
-        return self.asset_list[0]        
+        if len(self.asset_list) > 0:
+            return self.asset_list[0]
+        else:
+            return None
 
 
     def compute_order_gain(self, order, bid):

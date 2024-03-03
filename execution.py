@@ -181,7 +181,7 @@ class Operator:
                     if len(r['error']) > 0:
                         completed = True
                         success = False
-                    logger.error(f'ERROR placing market order in execution.py: {r}')
+                    logger.error(f'ERROR placing market order in execution.py (inner): {r}')
                     if 'EOrder:Insufficient funds' in r['error']:
                         completed = True
                         success = False
@@ -191,7 +191,7 @@ class Operator:
                     logger.info(f'Sell order successful: {r}')
                     clock.sleep(2)
             except Exception as e:
-                logger.error(f'Error placing sell limit order in execution.py: {e}')
+                logger.error(f'Error placing sell market order in execution.py (outer): {e}')
                 completed = True
         logger.trace('Out of market order loop')
 

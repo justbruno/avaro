@@ -44,6 +44,8 @@ while(True):
     all_close = [float(x[4]) for x in candles]
 
     f, (ax1, ax2) = plt.subplots(1, 2, sharey=True)
+
+    f.canvas.set_window_title('avaro Analysis')
     
     ax1.set_ylim(np.min(all_close)/1.001, np.max(all_close)*1.001)
     ax1.plot(all_close)
