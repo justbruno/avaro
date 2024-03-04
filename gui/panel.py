@@ -2,26 +2,31 @@ from PyQt5.QtCore import Qt, QTimer
 from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QLabel
 
 import time
+import reports
 
 class ControlPanel(QMainWindow):
-    def __init__(self, book_monitor=None, dispatcher=None):
+    def __init__(self, book_monitor=None, dispatcher=None, asset_manager=None):
         super().__init__()        
 
         self.book_monitor = book_monitor
         self.dispatcher = dispatcher
+        self.asset_manager = asset_manager
 
-
+        self.locked = False
+        
         # Buttons
         
         self.buy_limit_btn = QPushButton("1: Buy LIMIT")
         self.buy_market_btn = QPushButton("2: Buy MARKET")
         self.sell_limit_btn = QPushButton("3: Sell LIMIT")
         self.sell_market_btn = QPushButton("4: Sell MARKET")
+        self.lock_btn = QPushButton("L: Lock/Unlock")
 
         self.buy_limit_btn.clicked.connect(self.buy_limit_event)
         self.buy_market_btn.clicked.connect(self.buy_market_event)
         self.sell_limit_btn.clicked.connect(self.sell_limit_event)
         self.sell_market_btn.clicked.connect(self.sell_market_event)
+        self.lock_btn.clicked.connect(self.toggle_lock)
 
         btn_layout = QHBoxLayout()
 
@@ -29,6 +34,7 @@ class ControlPanel(QMainWindow):
         btn_layout.addWidget(self.buy_market_btn)
         btn_layout.addWidget(self.sell_limit_btn)
         btn_layout.addWidget(self.sell_market_btn)
+        btn_layout.addWidget(self.lock_btn)
 
         #---
 
@@ -47,10 +53,19 @@ class ControlPanel(QMainWindow):
         self.timer.timeout.connect(self.update_info) # connect the timeout signal to self.setting_label
         self.timer.start()
         #---
+
+        # Assets info
+        self.assets_title_l = QLabel("Assets:")
+        self.assets_l = QLabel("")
+        assets_layout = QVBoxLayout()
+        assets_layout.addWidget(self.assets_l)
+        #---
         
         layout = QVBoxLayout()
         layout.addLayout(btn_layout)
         layout.addLayout(book_layout)
+        layout.addLayout(assets_layout)
+
         
         container = QWidget()
         container.setLayout(layout)
@@ -72,6 +87,11 @@ class ControlPanel(QMainWindow):
         
 
     def keyPressEvent(self, e):
+        if e.key() == Qt.Key_L:
+            self.toggle_lock()
+        if self.locked:
+            return        
+
         if e.key() == Qt.Key_1:
             self.buy_limit_event()
         elif e.key() == Qt.Key_2:
@@ -86,10 +106,21 @@ class ControlPanel(QMainWindow):
         self.ask_l.setText(f"Ask: {ask}")
         self.spread_l.setText(f"Spr: {ask-bid:.2}")
         self.bid_l.setText(f"Bid:  {bid}")
-            
-def initialize(book_monitor, dispatcher):
+        msg = reports.build_asset_list(self.asset_manager, self.book_monitor)
+        self.assets_l.setText(msg)
+        
+        
+    def toggle_lock(self):
+        self.buy_limit_btn.setEnabled(not self.buy_limit_btn.isEnabled())
+        self.buy_market_btn.setEnabled(not self.buy_market_btn.isEnabled())
+        self.sell_limit_btn.setEnabled(not self.sell_limit_btn.isEnabled())
+        self.sell_market_btn.setEnabled(not self.sell_market_btn.isEnabled())
+        self.locked = not self.locked
+        
+        
+def initialize(book_monitor, dispatcher, asset_manager):
     app = QApplication([])
-    control_panel = ControlPanel(book_monitor=book_monitor, dispatcher=dispatcher)
+    control_panel = ControlPanel(book_monitor=book_monitor, dispatcher=dispatcher, asset_manager=asset_manager)
     control_panel.show()
 
     app.exec()

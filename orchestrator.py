@@ -36,8 +36,8 @@ def strat_starter(strat):
 def rate_reset_starter(exchange):
     exchange.decrease_rate_counter()
 
-def gui_starter(book_monitor, dispatcher):
-    panel.initialize(book_monitor, dispatcher)
+def gui_starter(book_monitor, dispatcher, asset_manager):
+    panel.initialize(book_monitor, dispatcher, asset_manager)
     
 class Orchestrator:    
     """
@@ -97,7 +97,7 @@ class Orchestrator:
 
         if config.GUI:
             logger.trace("Initializing GUI...")
-            gui_thread = threading.Thread(target=gui_starter, args=(self.book_monitor, self.dispatcher,))
+            gui_thread = threading.Thread(target=gui_starter, args=(self.book_monitor, self.dispatcher, self.asset_manager, ))
             gui_thread.start() 
             
     
