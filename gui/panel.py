@@ -1,5 +1,5 @@
 from PyQt5.QtCore import Qt, QTimer
-from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QLabel
+from PyQt5.QtWidgets import QApplication, QMainWindow, QPushButton, QVBoxLayout, QHBoxLayout, QWidget, QLabel, QLineEdit
 
 import time
 import reports
@@ -38,6 +38,22 @@ class ControlPanel(QMainWindow):
 
         #---
 
+        # Custom order controls
+        price_label = QLabel("Price")
+        self.price_le = QLineEdit()
+        expiry_label = QLabel("Expiry")
+        self.expiry_le = QLineEdit()
+        self.custom_order_btn = QPushButton("Buy LIMIT at custom price")
+        self.custom_order_btn.clicked.connect(self.custom_buy_limit_event)
+
+        custom_order_layout = QHBoxLayout()
+        custom_order_layout.addWidget(price_label)
+        custom_order_layout.addWidget(self.price_le)
+        custom_order_layout.addWidget(expiry_label)
+        custom_order_layout.addWidget(self.expiry_le)
+        custom_order_layout.addWidget(self.custom_order_btn)
+        #---
+        
         # Book info
         self.ask_l = QLabel("")
         self.spread_l = QLabel("")
@@ -49,7 +65,7 @@ class ControlPanel(QMainWindow):
         book_layout.addWidget(self.bid_l)
 
         self.timer = QTimer()        # create a new QTimer instance
-        self.timer.setInterval(1000) # make it fire every 1000 msec
+        self.timer.setInterval(250) # make it fire every 1000 msec
         self.timer.timeout.connect(self.update_info) # connect the timeout signal to self.setting_label
         self.timer.start()
         #---
@@ -63,6 +79,7 @@ class ControlPanel(QMainWindow):
         
         layout = QVBoxLayout()
         layout.addLayout(btn_layout)
+        layout.addLayout(custom_order_layout)
         layout.addLayout(book_layout)
         layout.addLayout(assets_layout)
 
@@ -85,6 +102,8 @@ class ControlPanel(QMainWindow):
     def sell_market_event(self):
         self.dispatcher.emit_sell(order_type='market')
         
+    def custom_buy_limit_event(self):
+        self.dispatcher.emit_buy(order_type='limit', price=int(self.price_le.text()), expiry=int(self.expiry_le.text()), give_up_margin=2000)
 
     def keyPressEvent(self, e):
         if e.key() == Qt.Key_L:

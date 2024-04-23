@@ -22,7 +22,7 @@ class Strat(strats.strat.Strat):
     and a decision to buy is made.
     """
     
-    def __init__(self, book_monitor, conf_file=None):
+    def __init__(self, book_monitor, asset_manager, conf_file=None):
         super().__init__()
         self.book_monitor = book_monitor        
         if conf_file == None:

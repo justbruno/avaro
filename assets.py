@@ -4,30 +4,37 @@ from iotools import logger
 from conf import constants
 from conf import config
 
-ASSETS_FILE = config.ASSETS_FILE
-
 class AssetManager():
     """
     This class holds and manages the list of assets we have bought, broken down by purchase price.
     """
     
-    def __init__(self):
+    def __init__(self, assets_file=None):
 
+        if assets_file != None:
+            self.assets_file = assets_file
+        else:
+            self.assets_file = config.ASSETS_FILE
+            
         logger.trace('Initiliasing AM')
-        logger.trace(ASSETS_FILE)
+        logger.trace(self.assets_file)
         
+        self.load_assets_from_file()
+        
+    def load_assets_from_file(self):
         self.asset_list = []
                 
-        with open(ASSETS_FILE, 'r') as f:
+        with open(self.assets_file, 'r') as f:
             for l in f:
                 s = l.strip('\n').split(',')
+
                 self.asset_list.append({'volume':float(s[1]), 'price':float(s[0]), 'progress':float(s[2]), 'timestamp':float(s[3])})
-
+               
         self.sort_asset_list()
-
-
+        
+        
     def dump_assets(self):
-        with open(ASSETS_FILE, 'w') as f:
+        with open(self.assets_file, 'w') as f:
             for s in self.asset_list:
                 f.write('{},{},{},{}\n'.format(s['price'], s['volume'], s['progress'], s['timestamp']))
         
@@ -45,6 +52,7 @@ class AssetManager():
         
 
     def queue_pop(self):
+        logger.trace("Queue pop")
         if len(self.asset_list) > 0:
             order = self.asset_list[0]
             self.asset_list = self.asset_list[1:]            
@@ -74,6 +82,15 @@ class AssetManager():
             return None
 
 
+    def get_cheapest(self):
+        if len(self.asset_list) > 0:
+            sorted_asset_list = sorted(self.asset_list, key=lambda order: order['price'])
+            return sorted_asset_list[0]
+        else:
+            return None
+
+
+        
     def compute_order_gain(self, order, bid):
         gain = (bid*order['volume']*(1-constants.FEE) - order['price']*order['volume']*(1+constants.FEE))
         return gain
@@ -84,5 +101,16 @@ class AssetManager():
         # The gain is estimated by taking a rough guess of where the bid should be at, as the formula is not
         # to sensitive to it.
         if len(self.asset_list) > 0:
-            bid_placeholder = np.min([o['price'] for o in self.asset_list])        
-            self.asset_list = sorted(self.asset_list, key=lambda order: -order['progress'] - self.compute_order_gain(order, bid_placeholder))
+            bid_placeholder = np.min([o['price'] for o in self.asset_list])
+            if config.ASSETS_ORDER == "profit":
+                f = lambda order: -order['progress'] - self.compute_order_gain(order, bid_placeholder)
+            elif config.ASSETS_ORDER == "cheapest":
+                f = lambda order: order['price']
+            self.asset_list = sorted(self.asset_list, key=f)
+
+
+    def get_held_btc(self):
+        total = 0
+        for o in self.asset_list:
+            total += o['volume']
+        return total

@@ -24,9 +24,10 @@ class Strat(strats.strat.Strat):
     said target price, the strat decides to buy. This is meant to take advantage of dips in price.    
     """
     
-    def __init__(self, book_monitor, conf_file=None):
+    def __init__(self, book_monitor, asset_manager, conf_file=None):
         super().__init__()
         self.book_monitor = book_monitor
+        self.asset_manager = asset_manager
 
         if conf_file == None:
             self.conf_file = config.BUY_CONF

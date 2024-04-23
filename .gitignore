@@ -23,6 +23,7 @@ print_report.py
 print_order.py
 profit_report.py
 assets.txt
+expo_assets.txt
 param_opt.py
 opt_launcher.py
 perf_eval.py

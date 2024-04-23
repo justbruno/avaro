@@ -50,6 +50,13 @@ class Strat(strats.strat.Strat):
         self.callbacks = []
 
     
+    def get_order_to_process(self):
+        if self.conf['ORDER_TO_PROCESS'] == "first":
+            return self.asset_manager.get_first()
+        elif self.conf['ORDER_TO_PROCESS'] == "cheapest":
+            return self.asset_manager.get_cheapest()
+        
+
     def print_report(self):
 
         mmp = self.book_monitor.get_mmp()
@@ -61,7 +68,7 @@ class Strat(strats.strat.Strat):
             BREAK_EVEN_PRICE = 0
             BTC_VOL = 0
         else:
-            current_order = self.asset_manager.get_first()
+            current_order = self.get_order_to_process()
             # Use this variable to lower the sell threshold, depending on current progress
             thr_shave = current_order['progress']/(current_order['price']*current_order['volume'])            
             BUY_PRICE = current_order['price']
@@ -113,7 +120,7 @@ class Strat(strats.strat.Strat):
             return
 
         # Get order info
-        current_order = self.asset_manager.get_first()
+        current_order = self.get_order_to_process()
         # Use this variable to lower the sell threshold, depending on current progress
         thr_shave = current_order['progress']/(current_order['price']*current_order['volume'])
         BUY_PRICE = current_order['price']

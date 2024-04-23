@@ -32,6 +32,9 @@ class Filter:
             return False
 
         funds = self.exchange.get_balance('EUR')
+        if funds == None:
+            logger.error("Could not retrieve funds in filter.")
+            return False
         #funds = float(r['result']['ZEUR']) #
 
         # For margin from last buy
@@ -55,7 +58,8 @@ class Filter:
         logger.trace(f"Queue length: {len(queue)}. Max: {conf['AUTO_BUYS']}")    
         logger.trace('-'*20)
         logger.trace()
-       
+
+        print(config.DEFAULT_BUY_VOL_EUR)        
         return funds >= config.DEFAULT_BUY_VOL_EUR \
             and time.time()-last_buy_time >= BUY_COOLDOWN \
             and last_buy_price-buy_price >= conf['REBUY_MARGIN'] \

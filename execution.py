@@ -34,7 +34,7 @@ class Operator:
         return bid
 
         
-    def buy_limit(self, amount, price=None):
+    def buy_limit(self, amount, price=None, expiry=9999, give_up_margin=None):
         """
         Emits a limit buy order, for the given amount in fiat currency (or pair right side, e.g. EUR for BTC-EUR) at the given price.
 
@@ -45,6 +45,9 @@ class Operator:
         :return: A tuple (success, result). If the operation was unsuccessful, success is False and result is undefined. If successful, success is True and result is a dictionary {'volume':(size in crypto), 'price':(price of executed order), 'timestamp':(approximate time of execution, estimated internally, not obtained from exchange)}.
         """
 
+        if give_up_margin == None:
+            give_up_margin = config.GIVE_UP_MARGIN
+        
         # Emit the order
         try:
             if price == None:
@@ -56,7 +59,8 @@ class Operator:
             logger.trace(e)
             return (False, None)
 
-        # Logging
+        start_time = time.time()
+        
         logger.trace(order)
         logger.trace('*'*50)
         s = 'BUY LIMIT ORDER - {} at {}'.format(size, price)
@@ -69,6 +73,9 @@ class Operator:
         success = False
 
         while not completed:
+            logger.trace('The operator is tracking a BUY LIMIT order')
+            logger.trace(order)
+
             # If the order is closed, we interpret that we managed to buy
             completed = self.exchange.order_is_closed(order)
 
@@ -78,9 +85,9 @@ class Operator:
             else:
                 clock.sleep(5)
 
-            # If the price went up too much...
+            # If the price went up too much or the order expired...
             ask, bid = self.book_monitor.get_ask_bid()
-            if not completed and bid - price >= config.GIVE_UP_MARGIN:
+            if not completed and (bid - price >= give_up_margin or (time.time()-start_time)/60 > expiry):
                 logger.trace('Trying to cancel...')
                 try:
                     r = self.exchange.cancel_order(order)
@@ -89,10 +96,18 @@ class Operator:
                     continue                    
                 s = 'CANCEL - {}'.format(self.book_monitor.get_ask_bid()[1])
                 logger.info(s)
-                success = False
-                order = None
+                # The order might have been partially filled. In that case,
+                # we consider the buy successful.
+                partial_vol = self.exchange.get_order_filled_volume(order)
+                if partial_vol > 0:
+                    success = True
+                    order['volume'] = partial_vol
+                    order['timestamp'] = time.time()
+                else:
+                    success = False
+                    order = None
                 completed = True
-
+                
         return success, order
 
                 

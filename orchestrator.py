@@ -68,7 +68,7 @@ class Orchestrator:
         self.dispatcher = dispatch.OrderDispatcher(asset_manager=self.asset_manager, operator=self.operator, op_filter=self.op_filter)
 
         # Buy/sell strats. When they decide to buy/sell, they call the given callback functions
-        self.buy_strat = buy_strat.Strat(self.book_monitor)
+        self.buy_strat = buy_strat.Strat(self.book_monitor, self.asset_manager)
         self.buy_strat.add_callback(self.dispatcher.emit_buy)
         self.sell_strat = sell_strat.Strat(self.book_monitor, self.asset_manager)
         self.sell_strat.add_callback(self.dispatcher.emit_sell)
@@ -164,6 +164,8 @@ class Orchestrator:
             else:
                 self.book_unresponsive = 0    
 
+            self.asset_manager.load_assets_from_file()
+                
             iteration += 1
             
 if __name__ == "__main__":

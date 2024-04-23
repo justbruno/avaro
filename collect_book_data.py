@@ -1,4 +1,4 @@
-0#!/usr/bin/env python3
+#!/usr/bin/env python3
 
 """
 Reads data from an order book monitor and dumps it in a file.
@@ -14,7 +14,7 @@ import exchange.kraken_book as book
 from pathlib import Path
 HOMEDIR = str(Path.home())
 
-OUTPUT_FILE = HOMEDIR + '/data/btc/kraken_book_dump_21.txt'
+OUTPUT_FILE = HOMEDIR + '/data/btc/kraken_book_dump_22.txt'
 
 def book_starter(book_monitor):
     logger.trace('Thread starting...')    

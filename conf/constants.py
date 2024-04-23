@@ -1,4 +1,4 @@
-FEE = 0.0016
+FEE = 0.0012
 
 ERROR_LOG = 'error.log'
 INFO_LOG = 'info.log'

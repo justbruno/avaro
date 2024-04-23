@@ -15,7 +15,7 @@ class OrderDispatcher:
         self.op_filter = op_filter
         
 
-    def emit_buy(self, amount=config.DEFAULT_BUY_VOL_EUR, price=None, order_type='limit'):
+    def emit_buy(self, amount=config.DEFAULT_BUY_VOL_EUR, price=None, order_type='limit', expiry=9999, give_up_margin=None):
         logger.info("Dispatcher: emitting buy")
         conditions_met = self.op_filter.buy_filter()
         if not conditions_met:
@@ -23,7 +23,7 @@ class OrderDispatcher:
             return
 
         if order_type == 'limit':
-            success, result = self.operator.buy_limit(amount=amount, price=price)
+            success, result = self.operator.buy_limit(amount=amount, price=price, expiry=expiry, give_up_margin=give_up_margin)
         elif order_type == 'market':
             success, result = self.operator.buy_market(amount=amount)
         else:
@@ -39,7 +39,7 @@ class OrderDispatcher:
 
 
     
-    def emit_sell(self, price=None, order_type='limit'):
+    def emit_sell(self, amount=None, price=None, order_type='limit'):
         logger.info("Dispatcher: emitting sell")
         order = self.asset_manager.get_first()        
 

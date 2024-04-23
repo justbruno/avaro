@@ -18,6 +18,7 @@ import hmac
 import json
 import numpy as np
 from iotools import logger
+from conf import config
 
 from pathlib import Path
 HOMEDIR = str(Path.home())
@@ -34,7 +35,7 @@ def round_price(price):
 
 class ExchangeInterface:
     def __init__(self):
-        self.nonce = 1
+        self.nonce = 3
         self.api_rate_counter = 0
         
     def decrease_rate_counter(self):
@@ -55,10 +56,10 @@ class ExchangeInterface:
         api_path = "/0/private/"
         api_nonce = str(int(time.time()*self.nonce*1000))
         try:
-            api_key = open(HOMEDIR + API_KEY_FILE).read().strip()
-            api_secret = base64.b64decode(open(HOMEDIR + API_SECRET_FILE).read().strip())
-        except:
-            logger.exchange_trace("API public key and API private (secret) key must be in text files called API_Public_Key and API_Private_Key")
+            api_key = open(HOMEDIR + config.API_KEY_FILE).read().strip()
+            api_secret = base64.b64decode(open(HOMEDIR + config.API_SECRET_FILE).read().strip())
+        except Exception as e:
+            logger.exchange_trace("Error reading API keys: " + e)
             sys.exit(1)
         api_postdata = api_data + "&nonce=" + api_nonce
         api_postdata = api_postdata.encode('utf-8')
@@ -266,6 +267,16 @@ class ExchangeInterface:
         return result
 
 
+    def get_order_info(self, order):
+        return self.get_order_from_id(order['txid'])
+
+
+    def get_order_filled_volume(self, order):
+        result = self.query_orders(order['txid'])
+        return float(result[order['txid']]['vol_exec'])
+
+
+    
     def cancel_order(self, order):
         txid = order['txid']
         logger.trace('CANCEL ORDER: {}'.format(txid))
@@ -287,11 +298,16 @@ class ExchangeInterface:
     def get_balance(self, asset):
         method="Balance"
         data=""
-        r = self.private_request(method, data)['result']
-        asset = ASSET_NAME_MAP[asset]
-        if asset in r:
-            return float(r[asset])
-        return r
+        try:
+            r = self.private_request(method, data)
+            r = r["result"]
+            asset = ASSET_NAME_MAP[asset]
+            if asset in r:
+                return float(r[asset])
+            else:
+                return None
+        except Exception as e:
+            logger.error(f"Error getting balance in kraken interface: {e}. Response: {r}")
 
                 
     def get_spread(self):

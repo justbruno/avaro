@@ -7,7 +7,7 @@ Dummy exchange interface for simulation.
 from exchange import master_exchange
 
 class ExchangeInterface(master_exchange.MasterExchange):
-    def __init__(self):
+    def __init__(self, conf=None):
         super(ExchangeInterface, self).__init__()
         print('USING DUMMY EXCHANGE')
         self.nonce = 1
