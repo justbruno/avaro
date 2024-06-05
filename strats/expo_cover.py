@@ -32,6 +32,7 @@ class Strat(strats.strat.Strat):
         if conf_file == None:
             self.conf_file = config.BUY_CONF
         self.conf = io_handler.load_conf(self.conf_file)
+        self.rebuy_margin = self.conf['REBUY_MARGIN']
         
         self.set_buy_criteria()
         
@@ -60,7 +61,7 @@ class Strat(strats.strat.Strat):
         queue = self.asset_manager.get_assets()
         logger.trace('='*50)
         logger.trace('Buy strat report')
-        logger.trace(f"Margin: {self.last_buy_price-bid} ({self.conf['REBUY_MARGIN']} required). Lapse: {lapse} ({self.buy_cooldown} required)")
+        logger.trace(f"Margin: {self.last_buy_price-bid} ({self.rebuy_margin} required). Lapse: {lapse} ({self.buy_cooldown} required)")
         logger.trace(f"Next buy: {BUY_SIZE_BASE * 2**len(queue)}")
         logger.trace('-'*50)
 
@@ -83,9 +84,10 @@ class Strat(strats.strat.Strat):
             self.set_buy_criteria()
             queue = self.asset_manager.get_assets()                
             buy_size = np.min([self.conf['MAX_VOL'], BUY_SIZE_BASE * 2**len(queue)])
-
+            self.rebuy_margin = self.conf['REBUY_MARGIN'] * 2**len(queue)
+            
             if time.time()-self.last_buy_time >= self.buy_cooldown\
-               and self.last_buy_price-bid >= self.conf['REBUY_MARGIN']\
+               and self.last_buy_price-bid >= self.rebuy_margin\
                and np.random.random() < self.conf['BUY_CHANCE']:
                 logger.info(f'Triggering BUY order: {bid}')
                 for callback in self.callbacks:

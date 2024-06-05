@@ -123,6 +123,19 @@ class Orchestrator:
             logger.error(f'Error while handling trigger: {e}')
 
 
+    def print_memory_usage(self):
+        print("Memory usage:")
+        print("exchange: ", sys.getsizeof(self.exchange))
+        print("book_monitor: ", sys.getsizeof(self.book_monitor))
+        print("operator: ", sys.getsizeof(self.operator))
+        print("asset_manager: ", sys.getsizeof(self.asset_manager))
+        print("op_filter: ", sys.getsizeof(self.op_filter))
+        print("dispatcher: ", sys.getsizeof(self.dispatcher))
+        print("buy_strat: ", sys.getsizeof(self.buy_strat))
+        print("sell_strat: ", sys.getsizeof(self.sell_strat))
+        print()
+
+
     def run(self):
         running = True
         iteration = 0
@@ -165,7 +178,9 @@ class Orchestrator:
                 self.book_unresponsive = 0    
 
             self.asset_manager.load_assets_from_file()
-                
+
+            self.print_memory_usage()
+            
             iteration += 1
             
 if __name__ == "__main__":
